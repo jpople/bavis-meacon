@@ -4,20 +4,26 @@ using UnityEngine;
 using TMPro;
 using System.Diagnostics;
 using System.Threading;
+using System.ComponentModel;
+using System;
 
 public class Dialogue : MonoBehaviour
 {
     public TextMeshProUGUI textComponent;
     public string[] lines;
     public float textSpeed;
-
     private int index;
+
+    public UnityEngine.UI.Image bavisImage;
+    public Sprite happyFace;
+    public Sprite sadFace;
     
     // Start is called before the first frame update
     void Start()
     {
         textComponent.text = string.Empty;
         StartDialogue();
+        bavisImage.sprite = happyFace;
     }
 
     // Update is called once per frame
@@ -34,14 +40,24 @@ public class Dialogue : MonoBehaviour
 
     IEnumerator TypeLine()
     {
+        if (lines[index][0] == 'L')
+        {
+            bavisImage.sprite = sadFace;
+        }
+        else
+        {
+            bavisImage.sprite = happyFace;
+        }
+
+        UnityEngine.Debug.Log("line check = " + (lines[index][0]));
+        //UnityEngine.Debug.Log("emotion is " + emotion);
+
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
-        UnityEngine.Debug.Log("IEnumarator done");
-        
-        UnityEngine.Debug.Log("done sleeping");
+
         if (index < lines.Length - 1)
         {
             Thread.Sleep(1000);

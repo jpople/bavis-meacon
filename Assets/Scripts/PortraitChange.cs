@@ -9,8 +9,8 @@ public class PortraitChange : MonoBehaviour
 
     UnityEngine.UI.Image m_Image;
     //Set this in the Inspector
-    public Sprite m_Sprite;
-    public Sprite sprite2;
+    public Sprite happyFace;
+    public Sprite sadFace;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class PortraitChange : MonoBehaviour
         //Press space to change the Sprite of the Image
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            m_Image.sprite = sprite2;
+            m_Image.sprite = sadFace;
         }
     }
 }
