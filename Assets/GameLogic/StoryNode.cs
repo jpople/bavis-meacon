@@ -30,8 +30,10 @@ public class BavisResponse
 public struct BavisLine
 {
     public string line;
-    public BavisLine(string line)
+    public string audioId;
+    public BavisLine(string line, string audioId = "default")
     {
         this.line = line;
+        this.audioId = audioId;
     }
 }

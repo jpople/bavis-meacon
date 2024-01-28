@@ -2,85 +2,157 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Diagnostics;
 using System.Threading;
-using System.ComponentModel;
-using System;
+using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
 {
-    public TextMeshProUGUI textComponent;
-    public string[] lines;
-    public float textSpeed;
-    private int index;
+    public TextMeshProUGUI dialogueText;
+    public TextMeshProUGUI promptText;
+    public TMP_InputField userInput;
 
-    public UnityEngine.UI.Image bavisImage;
+    Dictionary<string, StoryNode> storyTree;
+    StoryNode currentNode;
+    BavisResponse currentResponse;
+    List<BavisLine> currentDialogue;
+    int currentLineIndex;
+    public float textSpeed;
+
+    public Image bavisImage;
     public Sprite happyFace;
     public Sprite sadFace;
-    
-    // Start is called before the first frame update
+
+    [SerializeField] AudioClip[] typingSoundClips;
+    AudioSource source;
+    [SerializeField] private DialogueAudioInfoSO defaultAudioInfo;
+    [SerializeField] private DialogueAudioInfoSO[] allAudioInfoSOs;
+    Dictionary<string, DialogueAudioInfoSO> audioInfoLookup;
+    private DialogueAudioInfoSO currentAudioInfo;
+
     void Start()
     {
-        textComponent.text = string.Empty;
-        StartDialogue();
+        source = gameObject.AddComponent<AudioSource>();
+        dialogueText.text = string.Empty;
+        storyTree = DialogueTreeManager.SpoofStoryTree();
+        audioInfoLookup = InitializeAudioInfoLookup();
         bavisImage.sprite = happyFace;
+        userInput.onSubmit.AddListener(HandleSubmitInput);
+        EnterDialogueNode(storyTree["node-test"]);
+        StartCoroutine(TypeLine());
     }
 
-    // Update is called once per frame
-    void Update()
+    Dictionary<string, DialogueAudioInfoSO> InitializeAudioInfoLookup()
     {
-
+        var lookup = new Dictionary<string, DialogueAudioInfoSO>
+        {
+            { "default", defaultAudioInfo }
+        };
+        foreach (var i in allAudioInfoSOs)
+        {
+            lookup.Add(i.id, i);
+        }
+        return lookup;
     }
 
-    void StartDialogue()
+    void EnterDialogueNode(StoryNode newNode)
     {
-        index = 0;
+        currentNode = newNode;
+        currentResponse = null;
+        currentDialogue = currentNode.introLines;
+        currentLineIndex = 0;
+        dialogueText.text = string.Empty;
+        promptText.text = string.Empty;
+        userInput.interactable = true;
+        userInput.ActivateInputField();
+    }
+
+    void HandleSubmitInput(string input)
+    {
+        if (promptText.text == string.Empty)
+        {
+            userInput.ActivateInputField();
+            return;
+        }
+        if (currentNode.responses.TryGetValue(input, out BavisResponse response))
+        {
+            currentResponse = response;
+        }
+        else
+        {
+            currentResponse = currentNode.responses["default"];
+        }
+        if (currentResponse.nextNodeId != null)
+        {
+            userInput.interactable = false;
+        }
+        currentDialogue = currentResponse.lines;
+        currentLineIndex = 0;
+        userInput.text = string.Empty;
+        dialogueText.text = string.Empty;
+        userInput.ActivateInputField();
+        StopAllCoroutines();
         StartCoroutine(TypeLine());
     }
 
     IEnumerator TypeLine()
     {
-        if (lines[index][0] == 'L')
-        {
-            bavisImage.sprite = sadFace;
-        }
-        else
-        {
-            bavisImage.sprite = happyFace;
-        }
+        BavisLine currentLine = currentDialogue[currentLineIndex];
+        bavisImage.sprite = currentLineIndex % 2 == 0 ? sadFace : happyFace;
 
-        UnityEngine.Debug.Log("line check = " + (lines[index][0]));
-        //UnityEngine.Debug.Log("emotion is " + emotion);
+        currentAudioInfo = audioInfoLookup[currentLine.audioId] ?? defaultAudioInfo;
 
-        foreach (char c in lines[index].ToCharArray())
+        foreach (char c in currentLine.line.ToCharArray())
         {
-            textComponent.text += c;
+            PlayDialogueSound();
+            dialogueText.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
 
-        if (index < lines.Length - 1)
+        if (currentLineIndex < currentDialogue.Count - 1)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             NextLine();
         }
         else
         {
             StopAllCoroutines();
-            textComponent.text = lines[index];
+            dialogueText.text = currentLine.line;
+            if (currentResponse == null)
+            {
+                promptText.text = currentNode.userPrompt;
+                userInput.ActivateInputField();
+            }
+            else
+            {
+                if (currentResponse.nextNodeId != null)
+                {
+                    Thread.Sleep(1500);
+                    EnterDialogueNode(storyTree[currentResponse.nextNodeId]);
+                    StartCoroutine(TypeLine());
+                }
+            }
         }
+    }
+
+    private void PlayDialogueSound()
+    {
+        AudioClip sound = typingSoundClips[Random.Range(0, typingSoundClips.Length)];
+        source.pitch = Random.Range(currentAudioInfo.minPitch, currentAudioInfo.maxPitch);
+        source.PlayOneShot(sound);
+
     }
 
     void NextLine()
     {
-        if (index < lines.Length - 1)
+        if (currentLineIndex < currentDialogue.Count - 1)
         {
-            index++;
-            textComponent.text = string.Empty;
-            StartCoroutine (TypeLine());
+            currentLineIndex++;
+            dialogueText.text = string.Empty;
+            StartCoroutine(TypeLine());
         }
         else
         {
-            gameObject.SetActive(false);
+            Debug.Log("reached end of tree!");
         }
     }
 }

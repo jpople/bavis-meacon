@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TypingDisplay.unity
     guid: cf3704a3aa95c054d9482bb1f9b2b4e5
+  - enabled: 1
+    path: Assets/Scenes/Dialog.unity
+    guid: 4c03e36886bef98c58c24c65159e9cb4
   m_configObjects: {}
