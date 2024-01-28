@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: Neutral
   m_EditorClassIdentifier: 
   id: Neutral
-  dialogueTypingSoundClips:
-  - {fileID: 8300000, guid: 0bd3775fea01545cd9e55f7406ff5448, type: 3}
-  - {fileID: 8300000, guid: 5733ee31bb893af6884002d3372e24ae, type: 3}
-  - {fileID: 8300000, guid: 5d115588426204bf0897976c64a45db3, type: 3}
-  frequencyLevel: 2
-  minPitch: 0.5
-  maxPitch: 3
+  frequencyLevel: 1
+  minPitch: -1.56
+  maxPitch: -0.53
   stopAudioSource: 0

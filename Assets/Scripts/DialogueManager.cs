@@ -57,6 +57,7 @@ public class DialogueManager: MonoBehaviour {
         {
             int predictablePitchInt = (hashCode % pitchRangeInt) + minPitchInt;
             float predictablePitch = predictablePitchInt / 100f;
+            Debug.Log(predictablePitch);
             audioSource.pitch = predictablePitch;
         } else {
             audioSource.pitch = minPitch;
@@ -71,7 +72,7 @@ public class DialogueManager: MonoBehaviour {
     /*     EVERYTHING BELOW HERE (EXCEPT FOR THE FINAL BRACKET) IS FOR TESTING    */
     /* -------------------------------------------------------------------------- */
 
-    string text = "Hello World Hello World";
+    string text = "qwert yuio pasdfg hjkl zxcv bnm";
     // string text = "よく出来ましたね！";
     public Button button;
 
@@ -85,7 +86,7 @@ public class DialogueManager: MonoBehaviour {
     {
         foreach(char c in text)
         {
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.1f);
             PlayDialogueSound(c);
         }
     }

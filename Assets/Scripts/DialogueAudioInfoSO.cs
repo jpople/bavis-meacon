@@ -8,7 +8,6 @@ using UnityEngine;
 public class DialogueAudioInfoSO : ScriptableObject
 {
     public string id;
-    public AudioClip[] dialogueTypingSoundClips;
     [Range(1, 5)]
     public int frequencyLevel = 2;
     [Range(-3, 3)]
