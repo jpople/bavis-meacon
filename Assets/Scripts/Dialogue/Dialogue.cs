@@ -30,7 +30,7 @@ public class Dialogue : MonoBehaviour
     void Start()
     {
         dialogueText.text = string.Empty;
-        storyTree = DialogueManager.SpoofStoryTree();
+        storyTree = DialogueTreeManager.SpoofStoryTree();
         bavisImage.sprite = happyFace;
         userInput.onSubmit.AddListener(HandleSubmitInput);
         EnterDialogueNode(storyTree["node-test"]);

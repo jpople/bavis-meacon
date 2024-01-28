@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueManager : MonoBehaviour
+public class DialogueTreeManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI bavisDialogue;
     [SerializeField] TextMeshProUGUI wordPrompt;
