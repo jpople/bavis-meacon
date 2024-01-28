@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0605f2b87d343b2aaf44d8c71ebe261, type: 3}
-  m_Name: Neutral
+  m_Name: Angry
   m_EditorClassIdentifier: 
-  id: Neutral
-  frequencyLevel: 2
-  minPitch: -1.56
-  maxPitch: -0.53
+  id: Angry
+  frequencyLevel: 1
+  minPitch: 0.5
+  maxPitch: 3
   stopAudioSource: 0

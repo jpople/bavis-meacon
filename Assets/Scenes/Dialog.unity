@@ -656,11 +656,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultAudioInfo: {fileID: 11400000, guid: 9df78e253248983a19e8e62dfe0a3edd, type: 2}
-  audioInfos: []
   dialogueTypingSoundClips:
-  - {fileID: 8300000, guid: 0bd3775fea01545cd9e55f7406ff5448, type: 3}
-  - {fileID: 8300000, guid: 5733ee31bb893af6884002d3372e24ae, type: 3}
-  - {fileID: 8300000, guid: 5d115588426204bf0897976c64a45db3, type: 3}
+  - {fileID: 8300000, guid: 1cee781c3720ef362be89d75e14102a2, type: 3}
+  - {fileID: 8300000, guid: a2c92ac63549990b2ac7f85aaef0537d, type: 3}
+  - {fileID: 8300000, guid: d760f24d11b61574795d26cd1aaa8c6f, type: 3}
+  - {fileID: 8300000, guid: be6487a5657adb69bb41bbc5fa0259fe, type: 3}
+  - {fileID: 8300000, guid: aea9e0fa458b943d3b6affd09b2bac27, type: 3}
+  - {fileID: 8300000, guid: 8ac62477102febc01a52028829cf6fec, type: 3}
+  - {fileID: 8300000, guid: 8cee5baa56f2061558302e8d7e66981a, type: 3}
+  - {fileID: 8300000, guid: 0bf1f44ab571404f5b8d63c3acf3266d, type: 3}
   audioSource: {fileID: 1313369453}
   button: {fileID: 438713127}
 --- !u!1 &1313369451
@@ -705,7 +709,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0bd3775fea01545cd9e55f7406ff5448, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
