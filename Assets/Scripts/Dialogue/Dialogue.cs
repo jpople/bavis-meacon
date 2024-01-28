@@ -16,25 +16,42 @@ public class Dialogue : MonoBehaviour
     BavisResponse currentResponse;
     List<BavisLine> currentDialogue;
     int currentLineIndex;
-
-
-    // public string[] lines;
     public float textSpeed;
-    // private int index;
 
     public Image bavisImage;
     public Sprite happyFace;
     public Sprite sadFace;
 
-    // Start is called before the first frame update
+    [SerializeField] AudioClip[] typingSoundClips;
+    AudioSource source;
+    [SerializeField] private DialogueAudioInfoSO defaultAudioInfo;
+    [SerializeField] private DialogueAudioInfoSO[] allAudioInfoSOs;
+    Dictionary<string, DialogueAudioInfoSO> audioInfoLookup;
+    private DialogueAudioInfoSO currentAudioInfo;
+
     void Start()
     {
+        source = gameObject.AddComponent<AudioSource>();
         dialogueText.text = string.Empty;
         storyTree = DialogueTreeManager.SpoofStoryTree();
+        audioInfoLookup = InitializeAudioInfoLookup();
         bavisImage.sprite = happyFace;
         userInput.onSubmit.AddListener(HandleSubmitInput);
         EnterDialogueNode(storyTree["node-test"]);
         StartCoroutine(TypeLine());
+    }
+
+    Dictionary<string, DialogueAudioInfoSO> InitializeAudioInfoLookup()
+    {
+        var lookup = new Dictionary<string, DialogueAudioInfoSO>
+        {
+            { "default", defaultAudioInfo }
+        };
+        foreach (var i in allAudioInfoSOs)
+        {
+            lookup.Add(i.id, i);
+        }
+        return lookup;
     }
 
     void EnterDialogueNode(StoryNode newNode)
@@ -79,18 +96,14 @@ public class Dialogue : MonoBehaviour
 
     IEnumerator TypeLine()
     {
-        // if (currentDialogue[currentLineIndex].line[0] == 'L')
-        // {
-        //     bavisImage.sprite = sadFace;
-        // }
-        // else
-        // {
-        //     bavisImage.sprite = happyFace;
-        // }
+        BavisLine currentLine = currentDialogue[currentLineIndex];
         bavisImage.sprite = currentLineIndex % 2 == 0 ? sadFace : happyFace;
 
-        foreach (char c in currentDialogue[currentLineIndex].line.ToCharArray())
+        currentAudioInfo = audioInfoLookup[currentLine.audioId] ?? defaultAudioInfo;
+
+        foreach (char c in currentLine.line.ToCharArray())
         {
+            PlayDialogueSound();
             dialogueText.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
@@ -103,7 +116,7 @@ public class Dialogue : MonoBehaviour
         else
         {
             StopAllCoroutines();
-            dialogueText.text = currentDialogue[currentLineIndex].line;
+            dialogueText.text = currentLine.line;
             if (currentResponse == null)
             {
                 promptText.text = currentNode.userPrompt;
@@ -119,6 +132,14 @@ public class Dialogue : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void PlayDialogueSound()
+    {
+        AudioClip sound = typingSoundClips[Random.Range(0, typingSoundClips.Length)];
+        source.pitch = Random.Range(currentAudioInfo.minPitch, currentAudioInfo.maxPitch);
+        source.PlayOneShot(sound);
+
     }
 
     void NextLine()

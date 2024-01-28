@@ -80,7 +80,7 @@ public class DialogueTreeManager : MonoBehaviour
         },
         userPrompt: "floccinaucinihilipilification",
         responses: new() {
-            {"floccinaucinihilipilification", new("node-test-jp", new(){new("Yes, very impressive, well done.")})},
+            {"floccinaucinihilipilification", new("node-test-jp", new(){new("Yes, very impressive, well done.", "FlatAffect")})},
             {"test", new(null, new(){new("Surely you know by now that our input works?")})},
             {"fuck you", new(null, new(){new("There's no call for that kind of language.")})},
             {"default", new(null, new(){new("Maybe you should try the beginner course?"), new("To be clear, Bavis Meacon Productions, LLC does not offer refunds under any circumstances.")})}
@@ -94,9 +94,6 @@ public class DialogueTreeManager : MonoBehaviour
         },
         userPrompt: "保等登藝須 伊等布登伎奈之 安夜賣具左 加豆良尓勢武日 許由奈伎和多礼",
         responses: new() {
-            // {"floccinaucinihilipilification", new(null, new(){new("Yes, very impressive, well done.")})},
-            // {"test", new(null, new(){new("Surely you know by now that our input works?")})},
-            // {"fuck you", new(null, new(){new("There's no call for that kind of language.")})},
             {"default", new(null, new(){new("もう少し頑張りましょうね?"), new("Remember, the 伊 key is right next to the 藺 key.")})}
         }
     );

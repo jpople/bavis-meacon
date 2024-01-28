@@ -1244,6 +1244,14 @@ MonoBehaviour:
   bavisImage: {fileID: 880625945}
   happyFace: {fileID: 21300000, guid: 9ed42db511be1a341a2308d61db760f9, type: 3}
   sadFace: {fileID: 21300000, guid: 6faf5df03d58f3d459493c2f051290f3, type: 3}
+  typingSoundClips:
+  - {fileID: 8300000, guid: 5d115588426204bf0897976c64a45db3, type: 3}
+  - {fileID: 8300000, guid: 0bd3775fea01545cd9e55f7406ff5448, type: 3}
+  - {fileID: 8300000, guid: 5733ee31bb893af6884002d3372e24ae, type: 3}
+  defaultAudioInfo: {fileID: 11400000, guid: 9df78e253248983a19e8e62dfe0a3edd, type: 2}
+  allAudioInfoSOs:
+  - {fileID: 11400000, guid: 1022fbd6b79efb216b93e05d7beecafa, type: 2}
+  - {fileID: 11400000, guid: 9df78e253248983a19e8e62dfe0a3edd, type: 2}
 --- !u!114 &1167542723
 MonoBehaviour:
   m_ObjectHideFlags: 0
