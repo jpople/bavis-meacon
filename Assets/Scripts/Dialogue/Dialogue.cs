@@ -32,11 +32,15 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private DialogueAudioInfoSO defaultAudioInfo;
     [SerializeField] private DialogueAudioInfoSO[] allAudioInfoSOs;
     Dictionary<string, DialogueAudioInfoSO> audioInfoLookup;
+    // [SerializeField] private AudioClip[] typingSoundClips;
+
     private DialogueAudioInfoSO currentAudioInfo;
+    private int charIndexInWord;
 
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.playOnAwake = false;
         dialogueText.text = string.Empty;
         storyTree = DialogueTreeManager.SpoofStoryTree();
         audioInfoLookup = InitializeAudioInfoLookup();
@@ -44,6 +48,7 @@ public class Dialogue : MonoBehaviour
         userInput.onSubmit.AddListener(HandleSubmitInput);
         EnterDialogueNode(storyTree["intro"]);
         StartCoroutine(TypeLine());
+        charIndexInWord = 0;
     }
 
     Dictionary<string, DialogueAudioInfoSO> InitializeAudioInfoLookup()
@@ -139,7 +144,7 @@ public class Dialogue : MonoBehaviour
 
         foreach (char c in lineText.ToCharArray())
         {
-            PlayDialogueSound();
+            PlayDialogueSound(c);
             dialogueText.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
@@ -170,12 +175,52 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private void PlayDialogueSound()
+    private void PlayDialogueSound(char currentCharacter)
     {
-        AudioClip sound = typingSoundClips[Random.Range(0, typingSoundClips.Length)];
-        source.pitch = Random.Range(currentAudioInfo.minPitch, currentAudioInfo.maxPitch);
-        source.PlayOneShot(sound);
+        currentAudioInfo = defaultAudioInfo;
+        if (currentCharacter == ' ')
+        {
+            charIndexInWord = 0;
+            return;
+        }
 
+        if (!currentAudioInfo)
+        {
+            currentAudioInfo = defaultAudioInfo;
+        }
+
+        // set variables for the below based on our config
+        AudioClip soundClip = null;
+        int frequencyLevel = currentAudioInfo.frequencyLevel;
+        float minPitch = currentAudioInfo.minPitch;
+        float maxPitch = currentAudioInfo.maxPitch;
+        bool stopAudioSource = currentAudioInfo.stopAudioSource;
+
+        int hashCode = currentCharacter.GetHashCode();
+        // sound clip
+
+        int predictableIndex = Mathf.Abs(hashCode) % typingSoundClips.Length;
+
+        soundClip = typingSoundClips[predictableIndex];
+        Debug.Log(predictableIndex);
+        Debug.Log(soundClip);
+        // pitch
+        int minPitchInt = (int)(minPitch * 100);
+        int maxPitchInt = (int)(maxPitch * 100);
+        int pitchRangeInt = maxPitchInt - minPitchInt;
+        // cannot divide by 0, so if there is no range then skip the selection
+        if (pitchRangeInt != 0)
+        {
+            int predictablePitchInt = (hashCode % pitchRangeInt) + minPitchInt;
+            float predictablePitch = predictablePitchInt / 100f;
+            source.pitch = predictablePitch;
+        } else {
+            source.pitch = minPitch;
+        }
+
+        // play sound
+        source.PlayOneShot(soundClip);
+        charIndexInWord ++;
     }
 
     void NextLine()
