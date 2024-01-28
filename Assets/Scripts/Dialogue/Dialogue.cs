@@ -4,12 +4,17 @@ using UnityEngine;
 using TMPro;
 using System.Threading;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using System.Text.RegularExpressions;
 
 public class Dialogue : MonoBehaviour
 {
     public TextMeshProUGUI dialogueText;
     public TextMeshProUGUI promptText;
     public TMP_InputField userInput;
+
+    string correctUserName;
+    string wrongUserName;
 
     Dictionary<string, StoryNode> storyTree;
     StoryNode currentNode;
@@ -37,7 +42,7 @@ public class Dialogue : MonoBehaviour
         audioInfoLookup = InitializeAudioInfoLookup();
         bavisImage.sprite = happyFace;
         userInput.onSubmit.AddListener(HandleSubmitInput);
-        EnterDialogueNode(storyTree["node-test"]);
+        EnterDialogueNode(storyTree["intro"]);
         StartCoroutine(TypeLine());
     }
 
@@ -68,6 +73,13 @@ public class Dialogue : MonoBehaviour
 
     void HandleSubmitInput(string input)
     {
+        if (currentNode.id == "intro")
+        {
+            correctUserName = input;
+            wrongUserName = FuckedUpName(input);
+            Debug.Log(correctUserName);
+            Debug.Log(wrongUserName);
+        }
         if (promptText.text == string.Empty)
         {
             userInput.ActivateInputField();
@@ -94,14 +106,38 @@ public class Dialogue : MonoBehaviour
         StartCoroutine(TypeLine());
     }
 
+    string FuckedUpName(string name)
+    {
+        string lower = name.ToLower();
+        string result;
+        if (Regex.IsMatch(lower, "^[aeiouy]"))
+        {
+            result = "J" + lower;
+        }
+        else
+        {
+            char first = lower[0];
+            char newFirst = first == 'j' ? 'R' : 'J';
+            result = newFirst + lower[1..];
+        }
+        return result;
+    }
+
+    string ParseLine(string line)
+    {
+        return line.Replace("{{name}}", correctUserName).Replace("{{wrongName}}", wrongUserName);
+    }
+
     IEnumerator TypeLine()
     {
         BavisLine currentLine = currentDialogue[currentLineIndex];
         bavisImage.sprite = currentLineIndex % 2 == 0 ? sadFace : happyFace;
 
+        string lineText = ParseLine(currentLine.line);
+
         currentAudioInfo = audioInfoLookup[currentLine.audioId] ?? defaultAudioInfo;
 
-        foreach (char c in currentLine.line.ToCharArray())
+        foreach (char c in lineText.ToCharArray())
         {
             PlayDialogueSound();
             dialogueText.text += c;
@@ -116,7 +152,7 @@ public class Dialogue : MonoBehaviour
         else
         {
             StopAllCoroutines();
-            dialogueText.text = currentLine.line;
+            dialogueText.text = lineText;
             if (currentResponse == null)
             {
                 promptText.text = currentNode.userPrompt;
