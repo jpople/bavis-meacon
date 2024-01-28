@@ -1,0 +1,43 @@
+{
+    "nodeId": "tree-test-1",
+    "bavisLines": [
+        {
+            "audio-type": "angry",
+            "sprite": "angry-1",
+            "text": "some text"
+        },
+        {
+            "audio-type": "neutral",
+            "sprite": "neutral-1",
+            "text": "some more text"
+        }
+    ],
+    "responses": {
+        "default": {
+            "bavisLines": [
+                {
+                    "audio-type": "neutral",
+                    "sprite": "neutral-1",
+                    "text": "Maybe you should have bought the beginner course instead."
+                },
+                {
+                    "audio-type": "neutral",
+                    "sprite": "neutral-1",
+                    "text": "To be clear, Bavis Meacon LLC does not offer refunds under any circumstances."
+                }
+            ]
+        },
+        "floccinaucinihilipilification": {
+            "bavisLines": [
+                {
+                    "audio-type": "neutral",
+                    "sprite": "annoyed-1",
+                    "text": "Yes, very impressive, well done."
+                }
+            ],
+            "nextNodeId": "tree-test-2"
+        }
+    },
+    "timeLimit": 2000,
+    "wordPrompt": "floccinaucinihilipilification"
+}
