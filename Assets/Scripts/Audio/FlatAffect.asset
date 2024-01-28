@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: FlatAffect
   m_EditorClassIdentifier: 
   id: FlatAffect
-  dialogueTypingSoundClips: []
   frequencyLevel: 2
   minPitch: 1
-  maxPitch: 1
+  maxPitch: 2
   stopAudioSource: 0
