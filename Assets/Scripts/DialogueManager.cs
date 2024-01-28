@@ -23,7 +23,6 @@ public class DialogueManager : MonoBehaviour
         {
             _currentDialogueIndex = value;
             nextButton.interactable = GetNextButtonState();
-            Debug.Log($"CurrentDialogueIndex: {value}, currentDialogue.Count: {currentDialogue.Count}, isIntro: {isIntro}");
         }
     }
 
@@ -45,32 +44,60 @@ public class DialogueManager : MonoBehaviour
 
     }
 
-    StoryNode SpoofDefaultNode() => new(
+    public static Dictionary<string, StoryNode> SpoofStoryTree()
+    {
+        Dictionary<string, StoryNode> tree = new();
+        List<StoryNode> nodes = new() {
+            SpoofDefaultNode(),
+            SpoofNonDefaultNode(),
+            SpoofJapaneseNode(),
+        };
+        foreach (var n in nodes)
+        {
+            tree.Add(n.id, n);
+        }
+        return tree;
+    }
+
+    public static StoryNode SpoofDefaultNode() => new(
         id: "node-test",
         introLines: new() {
-            new("Hello, I'm Bavis Meacon.  Try typing the words you see at the top of your screen."),
-            new("Go ahead, it's okay.  Try typing the words.")
+            new("Hello, I'm Bavis Meacon.  Try typing the words you see at the top of your screen, then striking the \"Return\" key.")
         },
         userPrompt: "bat rat cat",
         responses: new() {
-            {"bat rat cat", new("node-test-2", new(){new("Well done!  Press 'next' to continue to the next exercise.")})},
-            {"test", new(null, new(){new("I see that you're testing the input.  I assure you, everything is in full working order."), new("Testing the button too, eh? Very shrewd.")})},
+            {"bat rat cat", new("node-test-2", new(){new("Well done!  Let's continue to the next exercise.")})},
+            {"test", new(null, new(){new("I see that you're testing the input.  I assure you, everything is in full working order.")})},
             {"fuck you", new(null, new(){new("There's no call for that kind of language.")})},
             {"default", new(null, new(){new("That's not quite what we were looking for.  Try again!")})}
         }
     );
 
-    StoryNode SpoofNonDefaultNode() => new(
+    public static StoryNode SpoofNonDefaultNode() => new(
         id: "node-test-2",
         introLines: new() {
             new("I see you already have some typing experience.  Here's something a little more difficult to try out.")
         },
         userPrompt: "floccinaucinihilipilification",
         responses: new() {
-            {"floccinaucinihilipilification", new(null, new(){new("Yes, very impressive, well done.")})},
+            {"floccinaucinihilipilification", new("node-test-jp", new(){new("Yes, very impressive, well done.")})},
             {"test", new(null, new(){new("Surely you know by now that our input works?")})},
             {"fuck you", new(null, new(){new("There's no call for that kind of language.")})},
-            {"default", new(null, new(){new("Maybe you should try the beginner course?"), new("To be clear, Bavis Meacon LLC does not offer refunds under any circumstances.")})}
+            {"default", new(null, new(){new("Maybe you should try the beginner course?"), new("To be clear, Bavis Meacon Productions, LLC does not offer refunds under any circumstances.")})}
+        }
+    );
+
+    public static StoryNode SpoofJapaneseNode() => new(
+        id: "node-test-jp",
+        introLines: new() {
+            new("Here's something different. Type the words you see at the top of the screen, then strike the \"Return\" key:")
+        },
+        userPrompt: "保等登藝須 伊等布登伎奈之 安夜賣具左 加豆良尓勢武日 許由奈伎和多礼",
+        responses: new() {
+            // {"floccinaucinihilipilification", new(null, new(){new("Yes, very impressive, well done.")})},
+            // {"test", new(null, new(){new("Surely you know by now that our input works?")})},
+            // {"fuck you", new(null, new(){new("There's no call for that kind of language.")})},
+            {"default", new(null, new(){new("もう少し頑張りましょうね?"), new("Remember, the 伊 key is right next to the 藺 key.")})}
         }
     );
 
