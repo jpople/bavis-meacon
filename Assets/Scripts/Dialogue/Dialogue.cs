@@ -35,11 +35,17 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private DialogueAudioInfoSO defaultAudioInfo;
     [SerializeField] private DialogueAudioInfoSO[] allAudioInfoSOs;
     Dictionary<string, DialogueAudioInfoSO> audioInfoLookup;
+    // [SerializeField] private AudioClip[] typingSoundClips;
+
     private DialogueAudioInfoSO currentAudioInfo;
+    private int charIndexInWord;
+
+    public AudioClip testClip;
 
     void Start()
     {
-        source = gameObject.AddComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
+        source.playOnAwake = false;
         dialogueText.text = string.Empty;
         storyTree = DialogueTreeManager.SpoofStoryTree();
         audioInfoLookup = InitializeAudioInfoLookup();
@@ -47,6 +53,7 @@ public class Dialogue : MonoBehaviour
         userInput.onSubmit.AddListener(HandleSubmitInput);
         EnterDialogueNode(storyTree["intro"]);
         StartCoroutine(TypeLine());
+        charIndexInWord = 0;
     }
 
     Dictionary<string, DialogueAudioInfoSO> InitializeAudioInfoLookup()
@@ -142,7 +149,7 @@ public class Dialogue : MonoBehaviour
 
         foreach (char c in lineText.ToCharArray())
         {
-            PlayDialogueSound();
+            PlayDialogueSound(dialogueText.text.Length);
             dialogueText.text += c;
             yield return new WaitForSeconds(textSpeed);
         }
@@ -173,12 +180,24 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private void PlayDialogueSound()
+    private void PlayDialogueSound(int length)
     {
-        AudioClip sound = typingSoundClips[Random.Range(0, typingSoundClips.Length)];
-        source.pitch = Random.Range(currentAudioInfo.minPitch, currentAudioInfo.maxPitch);
-        source.PlayOneShot(sound);
-
+        if (length % defaultAudioInfo.frequencyLevel != 0) return;
+        AudioClip randomClip = typingSoundClips[Random.Range(0, typingSoundClips.Length)];
+        int minPitchInt = (int)(defaultAudioInfo.minPitch * 100);
+        int maxPitchInt = (int)(defaultAudioInfo.maxPitch * 100);
+        int pitchRangeInt = maxPitchInt - minPitchInt;
+        if (pitchRangeInt != 0)
+        {
+            int predictablePitchInt = Random.Range(minPitchInt, maxPitchInt);
+            float predictablePitch = predictablePitchInt / 100f;
+            source.pitch = predictablePitch;
+        }
+        else
+        {
+            source.pitch = minPitchInt / 100f;
+        }
+        source.PlayOneShot(randomClip);
     }
 
     void NextLine()
