@@ -11,8 +11,26 @@ public class DialogueManager: MonoBehaviour {
     private DialogueAudioInfoSO currentAudioInfo;
     public AudioSource audioSource;
 
-    private void PlayDialogueSound(int currentDisplayedCharacterCount, char currentCharacter)
+    private int charIndexInWord;
+
+    void Start()
     {
+        charIndexInWord = 0;
+
+         //testing
+        Button btn = button.GetComponent < Button > ();
+        btn.onClick.AddListener(TaskOnClick);
+        // end testing
+    }
+
+    private void PlayDialogueSound(char currentCharacter)
+    {
+        if (currentCharacter == ' ')
+        {
+            charIndexInWord = 0;
+            return;
+        }
+
         if (!currentAudioInfo)
         {
             currentAudioInfo = defaultAudioInfo;
@@ -38,7 +56,7 @@ public class DialogueManager: MonoBehaviour {
         if (pitchRangeInt != 0)
         {
             int predictablePitchInt = (hashCode % pitchRangeInt) + minPitchInt;
-            float predictablePitch = predictablePitchInt / 100 f;
+            float predictablePitch = predictablePitchInt / 100f;
             audioSource.pitch = predictablePitch;
         } else {
             audioSource.pitch = minPitch;
@@ -46,22 +64,17 @@ public class DialogueManager: MonoBehaviour {
 
         // play sound
         audioSource.PlayOneShot(soundClip);
+        charIndexInWord ++;
     }
 
     /* -------------------------------------------------------------------------- */
     /*     EVERYTHING BELOW HERE (EXCEPT FOR THE FINAL BRACKET) IS FOR TESTING    */
     /* -------------------------------------------------------------------------- */
 
-    // string text = "Hello World Hello World";
-    string text = "よく出来ましたね！";
+    string text = "Hello World Hello World";
+    // string text = "よく出来ましたね！";
     public Button button;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Button btn = button.GetComponent < Button > ();
-        btn.onClick.AddListener(TaskOnClick);
-    }
 
     void TaskOnClick()
     {
@@ -70,18 +83,10 @@ public class DialogueManager: MonoBehaviour {
 
     private IEnumerator DialogueMiddleman()
     {
-        int idx = 0;
         foreach(char c in text)
         {
-            yield
-            return new WaitForSeconds(0.15 f);
-            if (c == ' ')
-            {
-                idx = 0;
-            } else {
-                PlayDialogueSound(idx, c);
-                idx++;
-            }
+            yield return new WaitForSeconds(0.15f);
+            PlayDialogueSound(c);
         }
     }
 }
