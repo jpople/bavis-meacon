@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "bavis-meacon.sln"
+    "dotnet.defaultSolution": "Bavis-Meacon.sln"
 }
