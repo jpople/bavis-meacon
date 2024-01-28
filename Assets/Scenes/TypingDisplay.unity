@@ -1242,8 +1242,11 @@ MonoBehaviour:
   userInput: {fileID: 1006012774}
   textSpeed: 0.06
   bavisImage: {fileID: 880625945}
-  happyFace: {fileID: 21300000, guid: 9ed42db511be1a341a2308d61db760f9, type: 3}
-  sadFace: {fileID: 21300000, guid: 6faf5df03d58f3d459493c2f051290f3, type: 3}
+  faces:
+  - {fileID: 21300000, guid: 9fbf3904385ddf54fabf9b809a150110, type: 3}
+  - {fileID: 21300000, guid: 9ed42db511be1a341a2308d61db760f9, type: 3}
+  - {fileID: 21300000, guid: 6bcd9452994b3ee4f9236e9dcb0b41da, type: 3}
+  - {fileID: 21300000, guid: 6faf5df03d58f3d459493c2f051290f3, type: 3}
   typingSoundClips:
   - {fileID: 8300000, guid: 5d115588426204bf0897976c64a45db3, type: 3}
   - {fileID: 8300000, guid: 0bd3775fea01545cd9e55f7406ff5448, type: 3}

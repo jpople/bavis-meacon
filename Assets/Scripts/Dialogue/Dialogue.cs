@@ -24,8 +24,11 @@ public class Dialogue : MonoBehaviour
     public float textSpeed;
 
     public Image bavisImage;
-    public Sprite happyFace;
-    public Sprite sadFace;
+    public Sprite[] faces;
+    // public Sprite happyFace;
+    // public Sprite sadFace;
+    // public Sprite neutralFace;
+    // public Sprite angryFace;
 
     [SerializeField] AudioClip[] typingSoundClips;
     AudioSource source;
@@ -40,7 +43,7 @@ public class Dialogue : MonoBehaviour
         dialogueText.text = string.Empty;
         storyTree = DialogueTreeManager.SpoofStoryTree();
         audioInfoLookup = InitializeAudioInfoLookup();
-        bavisImage.sprite = happyFace;
+        bavisImage.sprite = faces[0];
         userInput.onSubmit.AddListener(HandleSubmitInput);
         EnterDialogueNode(storyTree["intro"]);
         StartCoroutine(TypeLine());
@@ -131,7 +134,7 @@ public class Dialogue : MonoBehaviour
     IEnumerator TypeLine()
     {
         BavisLine currentLine = currentDialogue[currentLineIndex];
-        bavisImage.sprite = currentLineIndex % 2 == 0 ? sadFace : happyFace;
+        bavisImage.sprite = faces[Random.Range(0, 4)];
 
         string lineText = ParseLine(currentLine.line);
 
